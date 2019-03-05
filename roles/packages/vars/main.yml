@@ -1,0 +1,29 @@
+---
+homebrew:
+  taps:
+  - homebrew/bundle
+  - homebrew/cask
+  - homebrew/cask-drivers
+  - homebrew/cask-fonts
+  - homebrew/cask-versions
+  - homebrew/core
+  - homebrew/services
+  - koekeishiya/formulae
+  brews:
+  - node
+  - zsh
+  - tree
+  - nvm
+  - lastpass-cli
+  - fasd
+  - awscli
+  - fzf
+  - netdata
+  - telnet
+  casks:
+  - alfred
+  - docker
+  - iterm2
+  - rocket
+  - spotify
+  - microsoft-teams
