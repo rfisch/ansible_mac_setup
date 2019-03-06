@@ -20,10 +20,17 @@ homebrew:
   - fzf
   - netdata
   - telnet
+  - terraform
+  - terraform-docs
+  - terraform-inventory
+  - terraform-provisioner-ansible
+  - terraform_landscape
+  - terraforming
   casks:
   - alfred
-  - docker
   - iterm2
   - rocket
   - spotify
   - microsoft-teams
+  - kindle
+  - skype-for-business
