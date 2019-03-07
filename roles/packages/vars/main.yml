@@ -34,3 +34,5 @@ homebrew:
   - microsoft-teams
   - kindle
   - skype-for-business
+  - virtualbox
+  - vagrant

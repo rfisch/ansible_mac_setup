@@ -1,5 +1,10 @@
 --- #Setup MacOS packagees
 
+#Step 0: Make sure Mac Security allows downloads from open source clients w/out blocking
+- name: Ensure Allow downloads from anywhere is set
+  become: yes
+  shell: spctl --master-disable
+
 #Step 1: Copy Brewfile to user directory if it doesn't already exist or has been updated
 - name: Copy Source Controlled Brewfile
   copy:
@@ -19,7 +24,6 @@
   debug:
     var: homebrew_cleanup.stdout_lines
     verbosity: 3
-
 - name: Tap external repositories
   homebrew_tap:
     name: "{{ homebrew['taps'] }}"
