@@ -1,50 +1,62 @@
 --- #Setup MacOS packagees
-
-#Step 0: Make sure Mac Security allows downloads from open source clients w/out blocking
-- name: Ensure Allow downloads from anywhere is set
-  become: yes
-  shell: spctl --master-disable
-
-#Step 1: Copy Brewfile to user directory if it doesn't already exist or has been updated
-- name: Copy Source Controlled Brewfile
-  copy:
-    src: Brewfile
-    dest: "{{ brewfile_dest }}"
-    mode: 0644
-
-#clean up brew installs using Brewfile, this will otherwise not be removed if app is removed from variables
-- name: Cleanup Brew Files Package installs
-  shell: |
-    brew bundle cleanup --file={{ brewfile_dest }} --force
-  changed_when: "homebrew_cleanup.stdout_lines|length"
-  register: homebrew_cleanup
-
-#print the results of brew cleanup
-- name: Print homebrew cleanup stdout
-  debug:
-    var: homebrew_cleanup.stdout_lines
-    verbosity: 3
-- name: Tap external repositories
-  homebrew_tap:
-    name: "{{ homebrew['taps'] }}"
-    state: present
-
-- name: Install homebrew packages
-  homebrew:
-    name: "{{ homebrew['brews'] }}"
-    state: present
-
-- name: Install homebrew casks
-  homebrew_cask:
-    name: "{{ homebrew['casks'] }}"
-    greedy: yes
-    state: present
-
-- name: Update homebrew and upgrade all packages
-  homebrew:
-    update_homebrew: yes
-    upgrade_all: yes
-
-- name: Update homebrew cask and upgrade all packages
-  homebrew_cask:
-    upgrade_all: true
+- name: Main execution block
+  block:
+    #Step 0: Make sure Mac Security allows downloads from open source clients w/out blocking
+  - name: Ensure Allow downloads from anywhere is set
+    shell: spctl --master-disable
+    become: yes
+    become_method: sudo 
+  
+  #Step 1: Copy Brewfile to user directory if it doesn't already exist or has been updated
+  - name: Copy Source Controlled Brewfile
+    copy:
+      src: Brewfile
+      dest: "{{ brewfile_dest }}"
+      mode: 0644
+  
+  #clean up brew installs using Brewfile, this will otherwise not be removed if app is removed from variables
+  - name: Cleanup Brew Files Package installs
+    shell: |
+      brew bundle cleanup --file={{ brewfile_dest }} --force
+    changed_when: "homebrew_cleanup.stdout_lines|length"
+    register: homebrew_cleanup
+  
+  #print the results of brew cleanup
+  - name: Print homebrew cleanup stdout
+    debug:
+      var: homebrew_cleanup.stdout_lines
+      verbosity: 3
+  - name: Tap external repositories
+    homebrew_tap:
+      name: "{{ homebrew['taps'] }}"
+      state: present
+  
+  - name: Install homebrew packages
+    homebrew:
+      name: "{{ homebrew['brews'] }}"
+      state: present
+  
+  - name: Install homebrew casks
+    homebrew_cask:
+      name: "{{ homebrew['casks'] }}"
+      greedy: yes
+      state: present
+  
+  - name: Update homebrew and upgrade all packages
+    homebrew:
+      update_homebrew: yes
+      upgrade_all: yes
+  
+  - name: Update homebrew cask and upgrade all packages
+    homebrew_cask:
+      upgrade_all: true
+  
+  - name: Ensure Allow downloads from anywhere is set
+    become: yes
+    shell: spctl --master-disable
+  always:
+  - name: Remove Anywhere permissioning
+    shell: spctl --master-enable
+    become: yes
+    become_method: sudo 
+  

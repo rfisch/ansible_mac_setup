@@ -1,1 +1,5 @@
-localhost              ansible_connection=local
+mac ansible_host=localhost              
+
+[mac:vars]
+ansible_connection=local
+host_key_checking=False
